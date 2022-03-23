@@ -2,7 +2,7 @@
 SOFA plugin wrapping the Eigen linear solvers into SOFA components
 
 - SOFA: [https://www.sofa-framework.org/](https://www.sofa-framework.org/)
-- Eigen: [https://eigen.tuxfamily.org/](https://eigen.tuxfamily.org/
+- Eigen: [https://eigen.tuxfamily.org/](https://eigen.tuxfamily.org/)
 
 ## Components
 
