@@ -1,14 +1,3 @@
-<!--
-This scene belongs to a collection of similar scenes of a cantilever beam modeled
-with tetrahedra and solved with a backward Euler integration scheme.
-The differences are in the way the global system matrix is built and solved:
-* MatrixAssembly_matrixfreeCG.scn: the linear solver is a Conjugate Gradient and the matrix is not built
-* MatrixAssembly_assembledCG.scn: the linear solver is a Conjugate Gradient and the matrix is explicitly built
-* MatrixAssembly_assembledCG_blocs.scn: the linear solver is a Conjugate Gradient and the bloc-based matrix is explicitly built
-* MatrixAssembly_direct.scn: the linear solver is a LDL solver and the matrix is explicitly built
-* MatrixAssembly_direct_blocs.scn: the linear solver is a LDL solver and the bloc-based matrix is explicitly built
--->
-
 <Node name="root" gravity="-1.8 0 100" dt="0.001">
     <RequiredPlugin name="SofaBoundaryCondition"/>
     <RequiredPlugin name="SofaImplicitOdeSolver"/>
