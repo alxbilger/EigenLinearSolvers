@@ -80,6 +80,20 @@ The measurements were made without GUI, running 1000 time steps.
 
 The scene is available in [Cylinder_EigenSimplicialLDLT.scn](https://github.com/alxbilger/EigenLinearSolvers/blob/master/scenes/Cylinder_EigenSimplicialLDLT.scn)
 
+### DiamondRobot.py3scn
+
+Both solvers have been templated with `CompressedRowSparseMatrixMat3x3d`.
+The measurements were made without GUI, running 200 time steps.
+
+| Measure               | SparseLDLSolver | EigenSimplicialLDLT |
+|-----------------------|-----------------|---------------------|
+| total (s)             | 3.9661          | 3.30239             |
+| total (FPS)           | 50.4274         | 60.5622             |
+| MBKBuild (average ms) | 9.57            | 9.07                |
+| MBKSolve (average ms) | 7.75            | 4.96                |
+
+The scene is available in [DiamondRobot.py3scn.scn](https://github.com/SofaDefrost/SoftRobots/blob/master/docs/sofapython3/tutorials/DiamondRobot/DiamondRobot.py3scn)
+
 ## Build Instructions
 
 As any SOFA plugin, follow the build procedure on [sofa-framework.org/community/doc/plugins/build-a-plugin-from-sources/](https://www.sofa-framework.org/community/doc/plugins/build-a-plugin-from-sources/)
