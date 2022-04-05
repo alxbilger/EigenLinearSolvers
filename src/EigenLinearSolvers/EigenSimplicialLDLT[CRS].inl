@@ -6,16 +6,18 @@
 namespace EigenLinearSolvers
 {
 
-template <class TBlockType, class TEigenVector>
-void EigenSimplicialLDLT<sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType>, sofa::linearalgebra::eigen::EigenVector<
-TEigenVector>>::solve(Matrix& A, Vector& x, Vector& b)
+template <class TBlockType>
+void EigenSimplicialLDLT<sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType>, sofa::linearalgebra::FullVector<typename sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType>::Real> >
+    ::solve(Matrix& A, Vector& x, Vector& b)
 {
-    x.vector() = m_solver.solve(b.vector());
+    EigenVectorXdMap xMap(x.ptr(), x.size());
+    EigenVectorXdMap bMap(b.ptr(), b.size());
+    xMap = m_solver.solve(bMap);
 }
 
-template <class TBlockType, class TEigenVector>
-void EigenSimplicialLDLT<sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType>, sofa::linearalgebra::eigen::EigenVector<
-TEigenVector>>::invert(Matrix& A)
+template <class TBlockType>
+void EigenSimplicialLDLT<sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType>, sofa::linearalgebra::FullVector<typename sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType>::Real> >
+    ::invert(Matrix& A)
 {
     {
         sofa::helper::ScopedAdvancedTimer copyTimer("copyMatrixData");
@@ -25,8 +27,8 @@ TEigenVector>>::invert(Matrix& A)
 
     if (!m_map)
     {
-        m_map = std::make_unique<Map>(Mfiltered.rows(), Mfiltered.cols(), Mfiltered.getColsValue().size(),
-            (typename Map::StorageIndex*)Mfiltered.rowBegin.data(), (typename Map::StorageIndex*)Mfiltered.colsIndex.data(), Mfiltered.colsValue.data());
+        m_map = std::make_unique<EigenSparseMatrixMap>(Mfiltered.rows(), Mfiltered.cols(), Mfiltered.getColsValue().size(),
+            (typename EigenSparseMatrixMap::StorageIndex*)Mfiltered.rowBegin.data(), (typename EigenSparseMatrixMap::StorageIndex*)Mfiltered.colsIndex.data(), Mfiltered.colsValue.data());
     }
 
     const bool analyzePattern = (MfilteredrowBegin != Mfiltered.rowBegin) || (MfilteredcolsIndex != Mfiltered.colsIndex);

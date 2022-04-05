@@ -6,28 +6,32 @@
 namespace EigenLinearSolvers
 {
 
-template <class TBlockType, class TEigenVector>
-void EigenConjugateGradient<sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType>, sofa::linearalgebra::eigen::EigenVector<
-TEigenVector>>::solve(Matrix& A, Vector& x, Vector& b)
+template <class TBlockType>
+void EigenConjugateGradient<sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType>, sofa::linearalgebra::FullVector<typename sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType>::Real> >
+    ::solve(Matrix& A, Vector& x, Vector& b)
 {
     sofa::helper::ScopedAdvancedTimer solveTimer("solve");
+
+    EigenVectorXdMap xMap(x.ptr(), x.size());
+    EigenVectorXdMap bMap(b.ptr(), b.size());
+
     if (m_usedPreconditioner == 0)
     {
-        x.vector() = m_identityCG.solveWithGuess(b.vector(), x.vector());
+        xMap = m_identityCG.solveWithGuess(bMap, xMap);
     }
     else if (m_usedPreconditioner == 2)
     {
-        x.vector() = m_incompleteLUTCG.solveWithGuess(b.vector(), x.vector());
+        xMap = m_incompleteLUTCG.solveWithGuess(bMap, xMap);
     }
     else
     {
-        x.vector() = m_diagonalCG.solveWithGuess(b.vector(), x.vector());
+        xMap = m_diagonalCG.solveWithGuess(bMap, xMap);
     }
 }
 
-template <class TBlockType, class TEigenVector>
-void EigenConjugateGradient<sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType>, sofa::linearalgebra::eigen::EigenVector<
-TEigenVector>>::invert(Matrix& A)
+template <class TBlockType>
+void EigenConjugateGradient<sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType>, sofa::linearalgebra::FullVector<typename sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType>::Real> >
+    ::invert(Matrix& A)
 {
     {
         sofa::helper::ScopedAdvancedTimer copyTimer("copyMatrixData");
@@ -37,8 +41,8 @@ TEigenVector>>::invert(Matrix& A)
 
     if (!m_map)
     {
-        m_map = std::make_unique<Map>(Mfiltered.rows(), Mfiltered.cols(), Mfiltered.getColsValue().size(),
-            (typename Map::StorageIndex*)Mfiltered.rowBegin.data(), (typename Map::StorageIndex*)Mfiltered.colsIndex.data(), Mfiltered.colsValue.data());
+        m_map = std::make_unique<EigenSparseMatrixMap>(Mfiltered.rows(), Mfiltered.cols(), Mfiltered.getColsValue().size(),
+            (typename EigenSparseMatrixMap::StorageIndex*)Mfiltered.rowBegin.data(), (typename EigenSparseMatrixMap::StorageIndex*)Mfiltered.colsIndex.data(), Mfiltered.colsValue.data());
     }
 
     m_usedPreconditioner = this->d_preconditioner.getValue().getSelectedId();
