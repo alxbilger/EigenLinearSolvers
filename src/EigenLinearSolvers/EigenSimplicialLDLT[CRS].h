@@ -34,7 +34,7 @@ public:
     void invert(Matrix& A) override;
 
 protected:
-    Eigen::SimplicialLDLT<EigenSparseMatrixMap, Eigen::Lower> m_solver;
+    Eigen::SimplicialLDLT<Eigen::SparseMatrix<Real> > m_solver;
 
     sofa::linearalgebra::CompressedRowSparseMatrix<Real> Mfiltered;
     std::unique_ptr<EigenSparseMatrixMap> m_map;
