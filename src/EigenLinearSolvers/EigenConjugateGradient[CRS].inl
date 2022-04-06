@@ -10,6 +10,7 @@ template <class TBlockType>
 void EigenConjugateGradient<sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType>, sofa::linearalgebra::FullVector<typename sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType>::Real> >
     ::solve(Matrix& A, Vector& x, Vector& b)
 {
+    SOFA_UNUSED(A);
     sofa::helper::ScopedAdvancedTimer solveTimer("solve");
 
     EigenVectorXdMap xMap(x.ptr(), x.size());
