@@ -28,7 +28,7 @@ public:
 
     using EigenSparseMatrix = Eigen::SparseMatrix<Real, Eigen::RowMajor>;
     using EigenSparseMatrixMap = Eigen::Map<EigenSparseMatrix>;
-    using EigenVectorXdMap = Eigen::Map<Eigen::VectorX<Real> >;
+    using EigenVectorXdMap = Eigen::Map<Eigen::Matrix<Real, Eigen::Dynamic, 1> >;
 
     void solve (Matrix& A, Vector& x, Vector& b) override;
     void invert(Matrix& A) override;

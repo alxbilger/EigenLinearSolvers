@@ -3,6 +3,7 @@
 
 #include <EigenLinearSolvers/EigenConjugateGradient.h>
 #include <sofa/component/linearsolver/iterative/MatrixLinearSolver.h>
+#include <Eigen/Core>
 #include <Eigen/SparseCore>
 
 namespace EigenLinearSolvers
@@ -27,7 +28,7 @@ public:
 
     using EigenSparseMatrix = Eigen::SparseMatrix<Real, Eigen::RowMajor>;
     using EigenSparseMatrixMap = Eigen::Map<EigenSparseMatrix>;
-    using EigenVectorXdMap = Eigen::Map<Eigen::VectorX<Real> >;
+    using EigenVectorXdMap = Eigen::Map<Eigen::Matrix<Real, Eigen::Dynamic, 1> >;
 
     SOFA_CLASS2(SOFA_TEMPLATE2(EigenConjugateGradient, Matrix, Vector),SOFA_TEMPLATE2(sofa::component::linearsolver::MatrixLinearSolver, Matrix, Vector),
         EigenConjugateGradientImpl<EigenSparseMatrix>);
