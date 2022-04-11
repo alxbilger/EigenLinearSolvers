@@ -2,7 +2,13 @@
 #include <EigenLinearSolvers/config.h>
 
 #include <EigenLinearSolvers/EigenSimplicialLDLT.h>
+
+#if __has_include(<sofa/component/linearsolver/iterative/MatrixLinearSolver.h>)
 #include <sofa/component/linearsolver/iterative/MatrixLinearSolver.h>
+#else
+#include <SofaBaseLinearSolver/MatrixLinearSolver.h>
+#endif
+
 #include <Eigen/SparseCore>
 #include <Eigen/SparseCholesky>
 

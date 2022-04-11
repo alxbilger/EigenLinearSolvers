@@ -1,7 +1,10 @@
 cmake_minimum_required(VERSION 3.12)
 project(EigenLinearSolvers VERSION 1.0 LANGUAGES CXX)
 
-find_package(Sofa.Component.LinearSolver REQUIRED)
+find_package(Sofa.Component.LinearSolver QUIET)
+if (NOT Sofa.Component.LinearSolver_FOUND)
+    find_package(SofaBaseLinearSolver QUIET)
+endif()
 
 # List all files
 set(EIGENLINEARSOLVERS_SRC_DIR src/${PROJECT_NAME})
@@ -30,7 +33,11 @@ set(README_FILES
 add_library(${PROJECT_NAME} SHARED ${HEADER_FILES} ${SOURCE_FILES} ${README_FILES})
 
 # Link the plugin library to its dependency(ies).
-target_link_libraries(${PROJECT_NAME} Sofa.Component.LinearSolver)
+if (Sofa.Component.LinearSolver_FOUND)
+    target_link_libraries(${PROJECT_NAME} Sofa.Component.LinearSolver)
+elseif(SofaBaseLinearSolver_FOUND)
+    target_link_libraries(${PROJECT_NAME} SofaBaseLinearSolver)
+endif()
 
 # Create package Config, Version & Target files.
 # Deploy the headers, resources, scenes & examples.

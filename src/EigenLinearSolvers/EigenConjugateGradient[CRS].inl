@@ -69,4 +69,13 @@ void EigenConjugateGradient<sofa::linearalgebra::CompressedRowSparseMatrix<TBloc
     }
 }
 
+template <class TBlockType>
+EigenConjugateGradient<sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType>, sofa::linearalgebra::FullVector<
+typename sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType>::Real>>::EigenConjugateGradient(): Inherit1()
+    , d_maxIter(initData(&d_maxIter, 25u, "iterations","Maximum number of iterations of the Conjugate Gradient solution"))
+    , d_tolerance(initData(&d_tolerance, (Real)1e-5,"tolerance","Desired accuracy of the Conjugate Gradient solution evaluating: |r|²/|b|² (ratio of current residual norm over initial residual norm)"))
+    , d_preconditioner(initData(&d_preconditioner, sofa::helper::OptionsGroup(3, "identity", "diagonal", "incompleteLUT"), "preconditioner", "The preconditioner used by this solver"))
+{
+    sofa::helper::getWriteOnlyAccessor(d_preconditioner)->setSelectedItem(1);
+}
 }

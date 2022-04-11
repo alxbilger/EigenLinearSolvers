@@ -2,9 +2,18 @@
 #include <EigenLinearSolvers/config.h>
 
 #include <EigenLinearSolvers/EigenConjugateGradient.h>
+
+#if __has_include(<sofa/component/linearsolver/iterative/MatrixLinearSolver.h>)
 #include <sofa/component/linearsolver/iterative/MatrixLinearSolver.h>
+#else
+#include <SofaBaseLinearSolver/MatrixLinearSolver.h>
+#endif
+
 #include <Eigen/Core>
 #include <Eigen/SparseCore>
+#include <Eigen/Sparse>
+
+#include <sofa/helper/OptionsGroup.h>
 
 namespace EigenLinearSolvers
 {
@@ -19,7 +28,6 @@ class EigenConjugateGradient<
     : public sofa::component::linearsolver::MatrixLinearSolver<
         sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType>,
         sofa::linearalgebra::FullVector<typename sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType>::Real> >
-    , EigenConjugateGradientImpl<Eigen::SparseMatrix<typename sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType>::Real, Eigen::RowMajor> >
 {
 public:
     typedef sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType> Matrix;
@@ -30,23 +38,30 @@ public:
     using EigenSparseMatrixMap = Eigen::Map<EigenSparseMatrix>;
     using EigenVectorXdMap = Eigen::Map<Eigen::Matrix<Real, Eigen::Dynamic, 1> >;
 
-    SOFA_CLASS2(SOFA_TEMPLATE2(EigenConjugateGradient, Matrix, Vector),SOFA_TEMPLATE2(sofa::component::linearsolver::MatrixLinearSolver, Matrix, Vector),
-        EigenConjugateGradientImpl<EigenSparseMatrix>);
+    SOFA_CLASS(SOFA_TEMPLATE2(EigenConjugateGradient, Matrix, Vector),SOFA_TEMPLATE2(sofa::component::linearsolver::MatrixLinearSolver, Matrix, Vector));
 
     void solve (Matrix& A, Vector& x, Vector& b) override;
     void invert(Matrix& A) override;
 
 protected:
-    using Inherit2::m_usedPreconditioner;
-    using Inherit2::m_identityCG;
-    using Inherit2::m_incompleteLUTCG;
-    using Inherit2::m_diagonalCG;
+
+    sofa::Data<unsigned> d_maxIter; ///< maximum number of iterations of the Conjugate Gradient solution
+    sofa::Data<SReal> d_tolerance; ///< desired precision of the Conjugate Gradient Solution (ratio of current residual norm over initial residual norm)
+    sofa::Data<sofa::helper::OptionsGroup> d_preconditioner;
+
+    unsigned int m_usedPreconditioner {};
+
+    Eigen::ConjugateGradient<EigenSparseMatrix, Eigen::Lower|Eigen::Upper, Eigen::IdentityPreconditioner> m_identityCG;
+    Eigen::ConjugateGradient<EigenSparseMatrix, Eigen::Lower|Eigen::Upper, Eigen::IncompleteLUT<Real> > m_incompleteLUTCG;
+    Eigen::ConjugateGradient<EigenSparseMatrix, Eigen::Lower|Eigen::Upper, Eigen::DiagonalPreconditioner<Real> > m_diagonalCG;
 
     sofa::linearalgebra::CompressedRowSparseMatrix<Real> Mfiltered;
     std::unique_ptr<EigenSparseMatrixMap> m_map;
 
     typename sofa::linearalgebra::CompressedRowSparseMatrix<Real>::VecIndex MfilteredrowBegin;
     typename sofa::linearalgebra::CompressedRowSparseMatrix<Real>::VecIndex MfilteredcolsIndex;
+
+    EigenConjugateGradient();
 };
 
 #ifndef EIGENLINEARSOLVERS_EIGENCONJUGATEGRADIENT_CRS_CPP
