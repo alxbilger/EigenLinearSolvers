@@ -54,9 +54,9 @@ add_library(${PROJECT_NAME} SHARED ${HEADER_FILES} ${SOURCE_FILES} ${README_FILE
 
 # Link the plugin library to its dependency(ies).
 if (Sofa.Component.LinearSolver_FOUND)
-    target_link_libraries(${PROJECT_NAME} Sofa.Component.LinearSolver)
+    target_link_libraries(${PROJECT_NAME} Sofa.Component.LinearSolver metis)
 elseif(SofaBaseLinearSolver_FOUND)
-    target_link_libraries(${PROJECT_NAME} SofaBaseLinearSolver)
+    target_link_libraries(${PROJECT_NAME} SofaBaseLinearSolver metis)
 endif()
 
 # Create package Config, Version & Target files.
