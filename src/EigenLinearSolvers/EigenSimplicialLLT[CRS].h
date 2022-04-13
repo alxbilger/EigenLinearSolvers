@@ -3,9 +3,7 @@
 
 #include <EigenLinearSolvers/EigenSimplicialLLT.h>
 #include <EigenLinearSolvers/EigenDirectSparseSolver[CRS].h>
-
-#include <Eigen/SparseCore>
-#include <Eigen/SparseCholesky>
+#include <EigenLinearSolvers/SimplicialLLTTraits.h>
 
 namespace EigenLinearSolvers
 {
@@ -20,16 +18,15 @@ class EigenSimplicialLLT<
     : public EigenDirectSparseSolver<
         sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType>,
         sofa::linearalgebra::FullVector<typename sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType>::Real>,
-        Eigen::SimplicialLLT<Eigen::SparseMatrix<typename sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType>::Real> >
+        SimplicialLLTTraits<typename sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType>::Real>
     >
 {
 public:
     typedef sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType> Matrix;
     using Real = typename Matrix::Real;
     typedef sofa::linearalgebra::FullVector<Real> Vector;
-    using EigenSolver = Eigen::SimplicialLLT<Eigen::SparseMatrix<Real> >;
 
-    SOFA_CLASS(SOFA_TEMPLATE2(EigenSimplicialLLT, Matrix, Vector), SOFA_TEMPLATE3(EigenDirectSparseSolver, Matrix, Vector, EigenSolver));
+    SOFA_CLASS(SOFA_TEMPLATE2(EigenSimplicialLLT, Matrix, Vector), SOFA_TEMPLATE3(EigenDirectSparseSolver, Matrix, Vector, SimplicialLLTTraits<Real>));
 
 };
 

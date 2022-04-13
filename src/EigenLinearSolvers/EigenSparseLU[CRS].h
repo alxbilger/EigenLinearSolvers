@@ -3,9 +3,7 @@
 
 #include <EigenLinearSolvers/EigenSparseLU.h>
 #include <EigenLinearSolvers/EigenDirectSparseSolver[CRS].h>
-
-#include <Eigen/SparseCore>
-#include <Eigen/SparseLU>
+#include <EigenLinearSolvers/SparseLUTraits.h>
 
 namespace EigenLinearSolvers
 {
@@ -20,16 +18,15 @@ class EigenSparseLU<
     : public EigenDirectSparseSolver<
         sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType>,
         sofa::linearalgebra::FullVector<typename sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType>::Real>,
-        Eigen::SparseLU<Eigen::SparseMatrix<typename sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType>::Real>, Eigen::COLAMDOrdering<typename Eigen::SparseMatrix<typename sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType>::Real>::StorageIndex> >
+        SparseLUTraits<typename sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType>::Real>
     >
 {
 public:
     typedef sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType> Matrix;
     using Real = typename Matrix::Real;
     typedef sofa::linearalgebra::FullVector<Real> Vector;
-    using EigenSolver = Eigen::SparseLU<Eigen::SparseMatrix<Real>, Eigen::COLAMDOrdering<typename Eigen::SparseMatrix<Real>::StorageIndex> >;
 
-    SOFA_CLASS(SOFA_TEMPLATE2(EigenSparseLU, Matrix, Vector), SOFA_TEMPLATE3(EigenDirectSparseSolver, Matrix, Vector, EigenSolver));
+    SOFA_CLASS(SOFA_TEMPLATE2(EigenSparseLU, Matrix, Vector), SOFA_TEMPLATE3(EigenDirectSparseSolver, Matrix, Vector, SparseLUTraits<Real>));
 
 };
 
