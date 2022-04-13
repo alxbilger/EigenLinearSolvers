@@ -52,8 +52,6 @@ set(README_FILES
 # Create the plugin library.
 add_library(${PROJECT_NAME} SHARED ${HEADER_FILES} ${SOURCE_FILES} ${README_FILES})
 
-find_package(Metis REQUIRED)
-
 # Link the plugin library to its dependency(ies).
 if (Sofa.Component.LinearSolver.Direct_FOUND)
     target_link_libraries(${PROJECT_NAME} Sofa.Component.LinearSolver.Direct)
