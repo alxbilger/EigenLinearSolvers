@@ -40,7 +40,7 @@ public:
     using NaturalOrderSolver = typename EigenSolver::NaturalOrderSolver;
     using AMDOrderSolver     = typename EigenSolver::AMDOrderSolver;
     using COLAMDOrderSolver  = typename EigenSolver::COLAMDOrderSolver;
-
+    using MetisOrderSolver  = typename EigenSolver::MetisOrderSolver;
 
     ~EigenDirectSparseSolver() override = default;
 
@@ -57,9 +57,9 @@ public:
 protected:
 
     sofa::core::objectmodel::Data<sofa::helper::OptionsGroup> d_orderingMethod;
-    unsigned int m_selectedOrderingMethod;
+    unsigned int m_selectedOrderingMethod { std::numeric_limits<unsigned int>::max() };
 
-    std::variant<NaturalOrderSolver, AMDOrderSolver, COLAMDOrderSolver> m_solver;
+    std::variant<NaturalOrderSolver, AMDOrderSolver, COLAMDOrderSolver, MetisOrderSolver> m_solver;
 
     Eigen::ComputationInfo getSolverInfo() const;
     void updateSolverOderingMethod();

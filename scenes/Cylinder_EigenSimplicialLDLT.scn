@@ -11,7 +11,7 @@
 
         <EulerImplicitSolver name="odeImplicitSolver" />
 
-        <EigenSimplicialLDLT template="CompressedRowSparseMatrixMat3x3d"/>
+        <EigenSimplicialLDLT template="CompressedRowSparseMatrixMat3x3d" ordering="Metis"/>
 
         <MeshGmshLoader name="loader" filename="mesh/truthcylinder1.msh" />
         <TetrahedronSetTopologyContainer src="@loader" name="topologyContainer"/>

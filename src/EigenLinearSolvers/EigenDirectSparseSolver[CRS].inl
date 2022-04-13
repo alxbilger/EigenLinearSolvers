@@ -104,6 +104,7 @@ void EigenDirectSparseSolver<sofa::linearalgebra::CompressedRowSparseMatrix<TBlo
         case 0:  m_solver.emplace<NaturalOrderSolver>(); break;
         case 1:  m_solver.emplace<AMDOrderSolver>(); break;
         case 2:  m_solver.emplace<COLAMDOrderSolver>(); break;
+        case 3:  m_solver.emplace<MetisOrderSolver>(); break;
         default: m_solver.emplace<AMDOrderSolver>(); break;
         }
         m_selectedOrderingMethod = d_orderingMethod.getValue().getSelectedId();
@@ -122,7 +123,7 @@ typename sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType>::Real>, Eige
     : Inherit1()
     , d_orderingMethod(initData(&d_orderingMethod, "ordering", "Ordering method"))
 {
-    sofa::helper::OptionsGroup d_orderingMethodOptions(3,"Natural", "AMD", "COLAMD");
+    sofa::helper::OptionsGroup d_orderingMethodOptions(4,"Natural", "AMD", "COLAMD", "Metis");
     d_orderingMethodOptions.setSelectedItem(1); // default None
     d_orderingMethod.setValue(d_orderingMethodOptions);
 }
