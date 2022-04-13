@@ -3,7 +3,7 @@ project(EigenLinearSolvers VERSION 1.0 LANGUAGES CXX)
 
 find_package(Sofa.Component.LinearSolver.Direct QUIET)
 if (NOT Sofa.Component.LinearSolver_FOUND)
-    find_package(SofaBaseLinearSolver QUIET)
+    find_package(SofaSparseSolver QUIET)
 endif()
 
 # List all files
