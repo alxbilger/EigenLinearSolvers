@@ -15,15 +15,26 @@ set(HEADER_FILES
     ${EIGENLINEARSOLVERS_SRC_DIR}/EigenConjugateGradient[CRS].h
     ${EIGENLINEARSOLVERS_SRC_DIR}/EigenConjugateGradient[CRS].inl
 
+    ${EIGENLINEARSOLVERS_SRC_DIR}/EigenDirectSparseSolver.h
+    ${EIGENLINEARSOLVERS_SRC_DIR}/EigenDirectSparseSolver[CRS].h
+    ${EIGENLINEARSOLVERS_SRC_DIR}/EigenDirectSparseSolver[CRS].inl
+
     ${EIGENLINEARSOLVERS_SRC_DIR}/EigenSimplicialLDLT.h
     ${EIGENLINEARSOLVERS_SRC_DIR}/EigenSimplicialLDLT[CRS].h
-    ${EIGENLINEARSOLVERS_SRC_DIR}/EigenSimplicialLDLT[CRS].inl
+
+    ${EIGENLINEARSOLVERS_SRC_DIR}/EigenSimplicialLLT.h
+    ${EIGENLINEARSOLVERS_SRC_DIR}/EigenSimplicialLLT[CRS].h
+
+    ${EIGENLINEARSOLVERS_SRC_DIR}/EigenSparseLU.h
+    ${EIGENLINEARSOLVERS_SRC_DIR}/EigenSparseLU[CRS].h
 )
 set(SOURCE_FILES
     ${EIGENLINEARSOLVERS_SRC_DIR}/init.cpp
 
     ${EIGENLINEARSOLVERS_SRC_DIR}/EigenConjugateGradient[CRS].cpp
     ${EIGENLINEARSOLVERS_SRC_DIR}/EigenSimplicialLDLT[CRS].cpp
+    ${EIGENLINEARSOLVERS_SRC_DIR}/EigenSimplicialLLT[CRS].cpp
+    ${EIGENLINEARSOLVERS_SRC_DIR}/EigenSparseLU[CRS].cpp
 )
 set(README_FILES
     README.md

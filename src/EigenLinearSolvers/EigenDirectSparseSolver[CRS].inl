@@ -1,13 +1,13 @@
-#pragma once
-#include <EigenLinearSolvers/EigenSimplicialLDLT[CRS].h>
+﻿#pragma once
+#include <EigenLinearSolvers/EigenDirectSparseSolver[CRS].h>
 
 #include <sofa/helper/ScopedAdvancedTimer.h>
 
 namespace EigenLinearSolvers
 {
 
-template <class TBlockType>
-void EigenSimplicialLDLT<sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType>, sofa::linearalgebra::FullVector<typename sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType>::Real> >
+template <class TBlockType, class EigenSolver>
+void EigenDirectSparseSolver<sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType>, sofa::linearalgebra::FullVector<typename sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType>::Real>, EigenSolver >
     ::solve(Matrix& A, Vector& x, Vector& b)
 {
     EigenVectorXdMap xMap(x.ptr(), x.size());
@@ -15,8 +15,8 @@ void EigenSimplicialLDLT<sofa::linearalgebra::CompressedRowSparseMatrix<TBlockTy
     xMap = m_solver.solve(bMap);
 }
 
-template <class TBlockType>
-void EigenSimplicialLDLT<sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType>, sofa::linearalgebra::FullVector<typename sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType>::Real> >
+template <class TBlockType, class EigenSolver>
+void EigenDirectSparseSolver<sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType>, sofa::linearalgebra::FullVector<typename sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType>::Real>, EigenSolver >
     ::invert(Matrix& A)
 {
     {

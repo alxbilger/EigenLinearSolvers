@@ -5,7 +5,7 @@ namespace EigenLinearSolvers
 {
 
 /**
- * EigenConjugateGradient is a SOFA component allowing to solve a of linear equations. This is an essential component
+ * EigenConjugateGradient is a SOFA component allowing to solve a set of linear equations. This is an essential component
  * in a SOFA simulation.
  *
  * The class is empty because it is partially specialized in other files.
