@@ -27,6 +27,8 @@ template <class TBlockType, class EigenSolver>
 void EigenDirectSparseSolver<sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType>, sofa::linearalgebra::FullVector<typename sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType>::Real>, EigenSolver >
     ::solve(Matrix& A, Vector& x, Vector& b)
 {
+    SOFA_UNUSED(A);
+
     EigenVectorXdMap xMap(x.ptr(), x.size());
     EigenVectorXdMap bMap(b.ptr(), b.size());
 
