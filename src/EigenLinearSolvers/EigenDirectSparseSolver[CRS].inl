@@ -103,11 +103,11 @@ void EigenDirectSparseSolver<sofa::linearalgebra::CompressedRowSparseMatrix<TBlo
     {
         switch(d_orderingMethod.getValue().getSelectedId())
         {
-        case 0:  m_solver.emplace<NaturalOrderSolver>(); break;
-        case 1:  m_solver.emplace<AMDOrderSolver>(); break;
-        case 2:  m_solver.emplace<COLAMDOrderSolver>(); break;
-        case 3:  m_solver.emplace<MetisOrderSolver>(); break;
-        default: m_solver.emplace<AMDOrderSolver>(); break;
+        case 0:  m_solver.template emplace<NaturalOrderSolver>(); break;
+        case 1:  m_solver.template emplace<AMDOrderSolver>(); break;
+        case 2:  m_solver.template emplace<COLAMDOrderSolver>(); break;
+        case 3:  m_solver.template emplace<MetisOrderSolver>(); break;
+        default: m_solver.template emplace<AMDOrderSolver>(); break;
         }
         m_selectedOrderingMethod = d_orderingMethod.getValue().getSelectedId();
         if (m_selectedOrderingMethod > 2)
