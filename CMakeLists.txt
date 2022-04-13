@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.12)
 project(EigenLinearSolvers VERSION 1.0 LANGUAGES CXX)
 
-find_package(Sofa.Component.LinearSolver QUIET)
+find_package(Sofa.Component.LinearSolver.Direct QUIET)
 if (NOT Sofa.Component.LinearSolver_FOUND)
     find_package(SofaBaseLinearSolver QUIET)
 endif()
@@ -52,13 +52,13 @@ set(README_FILES
 # Create the plugin library.
 add_library(${PROJECT_NAME} SHARED ${HEADER_FILES} ${SOURCE_FILES} ${README_FILES})
 
-sofa_find_package(metis REQUIRED)
+sofa_find_package(Metis REQUIRED)
 
 # Link the plugin library to its dependency(ies).
 if (Sofa.Component.LinearSolver_FOUND)
-    target_link_libraries(${PROJECT_NAME} Sofa.Component.LinearSolver metis)
+    target_link_libraries(${PROJECT_NAME} Sofa.Component.LinearSolver Metis)
 elseif(SofaBaseLinearSolver_FOUND)
-    target_link_libraries(${PROJECT_NAME} SofaBaseLinearSolver metis)
+    target_link_libraries(${PROJECT_NAME} SofaBaseLinearSolver Metis)
 endif()
 
 # Create package Config, Version & Target files.
