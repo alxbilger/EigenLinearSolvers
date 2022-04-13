@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.12)
 project(EigenLinearSolvers VERSION 1.0 LANGUAGES CXX)
 
+find_package(SofaFramework REQUIRED)
 find_package(Sofa.Component.LinearSolver.Direct QUIET)
 if (NOT Sofa.Component.LinearSolver.Direct_FOUND)
     find_package(SofaSparseSolver QUIET)
