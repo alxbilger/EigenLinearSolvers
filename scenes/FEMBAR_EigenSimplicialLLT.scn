@@ -1,7 +1,7 @@
 <Node name="root" dt="0.02" gravity="0 -10 0">
 
     <Node name="plugins">
-        <RequiredPlugin name="EigenLinearSolvers"/> <!-- Needed to use components [EigenConjugateGradient] -->
+        <RequiredPlugin name="EigenLinearSolvers"/> <!-- Needed to use components [EigenSimplicialLLT] -->
         <RequiredPlugin name="Sofa.Component.Constraint.Projective"/> <!-- Needed to use components [FixedConstraint] -->
         <RequiredPlugin name="Sofa.Component.Mass"/> <!-- Needed to use components [UniformMass] -->
         <RequiredPlugin name="Sofa.Component.ODESolver.Backward"/> <!-- Needed to use components [EulerImplicitSolver] -->
@@ -19,7 +19,7 @@
     <DefaultVisualManagerLoop name="visualLoop"/>
 
     <EulerImplicitSolver name="odesolver" rayleighStiffness="0.1" rayleighMass="0.1" />
-    <EigenConjugateGradient template="CompressedRowSparseMatrixMat3x3d" iterations="1000" tolerance="1e-9" preconditioner="diagonal"/>
+    <EigenSimplicialLLT template="CompressedRowSparseMatrixMat3x3d" ordering="AMD"/>
 
     <RegularGridTopology name="grid" nx="4" ny="4" nz="20" xmin="-9" xmax="-6" ymin="0" ymax="3" zmin="0" zmax="19" />
     <MechanicalObject name="DoFs" />

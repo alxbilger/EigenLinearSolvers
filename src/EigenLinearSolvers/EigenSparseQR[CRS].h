@@ -1,24 +1,24 @@
 #pragma once
 #include <EigenLinearSolvers/config.h>
 
-#include <EigenLinearSolvers/EigenSimplicialLDLT.h>
+#include <EigenLinearSolvers/EigenSparseQR.h>
 #include <EigenLinearSolvers/EigenDirectSparseSolver[CRS].h>
-#include <EigenLinearSolvers/SimplicialLDLTTraits.h>
+#include <EigenLinearSolvers/SparseQRTraits.h>
 
 namespace EigenLinearSolvers
 {
 
 /**
- * Partial template specialization of EigenSimplicialLDLT for a matrix of type CompressedRowSparseMatrix
+ * Partial template specialization of EigenSparseQR for a matrix of type CompressedRowSparseMatrix
  */
 template<class TBlockType>
-class EigenSimplicialLDLT<
+class EigenSparseQR<
         sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType>,
         sofa::linearalgebra::FullVector<typename sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType>::Real> >
     : public EigenDirectSparseSolver<
         sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType>,
         sofa::linearalgebra::FullVector<typename sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType>::Real>,
-        SimplicialLDLTTraits<typename sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType>::Real>
+        SparseQRTraits<typename sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType>::Real>
     >
 {
 public:
@@ -26,13 +26,13 @@ public:
     using Real = typename Matrix::Real;
     typedef sofa::linearalgebra::FullVector<Real> Vector;
 
-    SOFA_CLASS(SOFA_TEMPLATE2(EigenSimplicialLDLT, Matrix, Vector),SOFA_TEMPLATE3(EigenDirectSparseSolver, Matrix, Vector, SimplicialLDLTTraits<Real>));
+    SOFA_CLASS(SOFA_TEMPLATE2(EigenSparseQR, Matrix, Vector), SOFA_TEMPLATE3(EigenDirectSparseSolver, Matrix, Vector, SparseQRTraits<Real>));
 
 };
 
-#ifndef EIGENLINEARSOLVERS_EIGENEIGENSIMPLICIALLDLT_CRS_CPP
-    extern template class SOFA_EIGENLINEARSOLVERS_API EigenSimplicialLDLT< sofa::linearalgebra::CompressedRowSparseMatrix<SReal>, sofa::linearalgebra::FullVector<SReal> >;
-    extern template class SOFA_EIGENLINEARSOLVERS_API EigenSimplicialLDLT<
+#ifndef EIGENLINEARSOLVERS_EIGENSPARSELU_CRS_CPP
+    extern template class SOFA_EIGENLINEARSOLVERS_API EigenSparseQR< sofa::linearalgebra::CompressedRowSparseMatrix<SReal>, sofa::linearalgebra::FullVector<SReal> >;
+    extern template class SOFA_EIGENLINEARSOLVERS_API EigenSparseQR<
         sofa::linearalgebra::CompressedRowSparseMatrix< sofa::type::Mat<3,3,SReal> >,
         sofa::linearalgebra::FullVector<SReal> >;
 #endif
