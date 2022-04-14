@@ -7,6 +7,10 @@ if (NOT Sofa.Component.LinearSolver.Direct_FOUND)
     find_package(SofaSparseSolver QUIET)
 endif()
 
+if (NOT Sofa.Component.LinearSolver.Direct_FOUND AND NOT SofaSparseSolver_FOUND)
+    message(FATAL "Cannot find the linear solver module in SOFA")
+endif()
+
 # List all files
 set(EIGENLINEARSOLVERS_SRC_DIR src/${PROJECT_NAME})
 set(HEADER_FILES
