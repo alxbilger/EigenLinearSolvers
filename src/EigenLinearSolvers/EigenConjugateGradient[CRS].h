@@ -9,6 +9,7 @@
 #include <SofaBaseLinearSolver/MatrixLinearSolver.h>
 #endif
 
+#include <variant>
 #include <Eigen/Core>
 #include <Eigen/SparseCore>
 #include <Eigen/Sparse>
@@ -40,6 +41,9 @@ public:
 
     SOFA_CLASS(SOFA_TEMPLATE2(EigenConjugateGradient, Matrix, Vector),SOFA_TEMPLATE2(sofa::component::linearsolver::MatrixLinearSolver, Matrix, Vector));
 
+    void init() override;
+    void reinit() override;
+
     void solve (Matrix& A, Vector& x, Vector& b) override;
     void invert(Matrix& A) override;
 
@@ -49,11 +53,15 @@ protected:
     sofa::Data<SReal> d_tolerance; ///< desired precision of the Conjugate Gradient Solution (ratio of current residual norm over initial residual norm)
     sofa::Data<sofa::helper::OptionsGroup> d_preconditioner;
 
-    unsigned int m_usedPreconditioner {};
+    void updatePreconditioner();
 
-    Eigen::ConjugateGradient<EigenSparseMatrix, Eigen::Lower|Eigen::Upper, Eigen::IdentityPreconditioner> m_identityCG;
-    Eigen::ConjugateGradient<EigenSparseMatrix, Eigen::Lower|Eigen::Upper, Eigen::IncompleteLUT<Real> > m_incompleteLUTCG;
-    Eigen::ConjugateGradient<EigenSparseMatrix, Eigen::Lower|Eigen::Upper, Eigen::DiagonalPreconditioner<Real> > m_diagonalCG;
+    unsigned int m_usedPreconditioner { std::numeric_limits<unsigned int>::max()};
+
+    std::variant<
+        Eigen::ConjugateGradient<EigenSparseMatrix, Eigen::Lower|Eigen::Upper, Eigen::IdentityPreconditioner>,
+        Eigen::ConjugateGradient<EigenSparseMatrix, Eigen::Lower|Eigen::Upper, Eigen::IncompleteLUT<Real> >,
+        Eigen::ConjugateGradient<EigenSparseMatrix, Eigen::Lower|Eigen::Upper, Eigen::DiagonalPreconditioner<Real> >
+    > m_solver;
 
     sofa::linearalgebra::CompressedRowSparseMatrix<Real> Mfiltered;
     std::unique_ptr<EigenSparseMatrixMap> m_map;

@@ -7,6 +7,20 @@ namespace EigenLinearSolvers
 {
 
 template <class TBlockType>
+void EigenConjugateGradient<sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType>, sofa::linearalgebra::
+FullVector<typename sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType>::Real>>::init()
+{
+    updatePreconditioner();
+}
+
+template <class TBlockType>
+void EigenConjugateGradient<sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType>, sofa::linearalgebra::FullVector<
+typename sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType>::Real>>::reinit()
+{
+    updatePreconditioner();
+}
+
+template <class TBlockType>
 void EigenConjugateGradient<sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType>, sofa::linearalgebra::FullVector<typename sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType>::Real> >
     ::solve(Matrix& A, Vector& x, Vector& b)
 {
@@ -16,18 +30,10 @@ void EigenConjugateGradient<sofa::linearalgebra::CompressedRowSparseMatrix<TBloc
     EigenVectorXdMap xMap(x.ptr(), x.size());
     EigenVectorXdMap bMap(b.ptr(), b.size());
 
-    if (m_usedPreconditioner == 0)
+    std::visit([&bMap, &xMap](auto&& solver)
     {
-        xMap = m_identityCG.solveWithGuess(bMap, xMap);
-    }
-    else if (m_usedPreconditioner == 2)
-    {
-        xMap = m_incompleteLUTCG.solveWithGuess(bMap, xMap);
-    }
-    else
-    {
-        xMap = m_diagonalCG.solveWithGuess(bMap, xMap);
-    }
+        xMap = solver.solveWithGuess(bMap, xMap);
+    }, m_solver);
 }
 
 template <class TBlockType>
@@ -46,26 +52,36 @@ void EigenConjugateGradient<sofa::linearalgebra::CompressedRowSparseMatrix<TBloc
             (typename EigenSparseMatrixMap::StorageIndex*)Mfiltered.rowBegin.data(), (typename EigenSparseMatrixMap::StorageIndex*)Mfiltered.colsIndex.data(), Mfiltered.colsValue.data());
     }
 
-    m_usedPreconditioner = this->d_preconditioner.getValue().getSelectedId();
-
     sofa::helper::ScopedAdvancedTimer factorizationTimer("factorization");
-    if (m_usedPreconditioner == 0)
+
+    std::visit([this](auto&& solver)
     {
-        m_identityCG.setTolerance(this->d_tolerance.getValue());
-        m_identityCG.setMaxIterations(this->d_maxIter.getValue());
-        m_identityCG.compute(*m_map);
-    }
-    else if (m_usedPreconditioner == 2)
+        solver.setTolerance(this->d_tolerance.getValue());
+        solver.setMaxIterations(this->d_maxIter.getValue());
+        solver.compute(*m_map);
+    }, m_solver);
+}
+
+template <class TBlockType>
+void EigenConjugateGradient<sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType>, sofa::linearalgebra::FullVector<
+typename sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType>::Real>>::updatePreconditioner()
+{
+    if (m_usedPreconditioner != d_preconditioner.getValue().getSelectedId())
     {
-        m_incompleteLUTCG.setTolerance(this->d_tolerance.getValue());
-        m_incompleteLUTCG.setMaxIterations(this->d_maxIter.getValue());
-        m_incompleteLUTCG.compute(*m_map);
-    }
-    else
-    {
-        m_diagonalCG.setTolerance(this->d_tolerance.getValue());
-        m_diagonalCG.setMaxIterations(this->d_maxIter.getValue());
-        m_diagonalCG.compute(*m_map);
+        switch(d_preconditioner.getValue().getSelectedId())
+        {
+        case 0:  m_solver.template emplace<std::variant_alternative_t<0, decltype(m_solver)> >(); break;
+        case 1:  m_solver.template emplace<std::variant_alternative_t<1, decltype(m_solver)> >(); break;
+        case 2:  m_solver.template emplace<std::variant_alternative_t<2, decltype(m_solver)> >(); break;
+        default: m_solver.template emplace<std::variant_alternative_t<1, decltype(m_solver)> >(); break;
+        }
+        m_usedPreconditioner = d_preconditioner.getValue().getSelectedId();
+        if (m_usedPreconditioner >= std::variant_size_v<decltype(m_solver)>)
+            m_usedPreconditioner = 1;
+
+        MfilteredrowBegin.clear();
+        MfilteredcolsIndex.clear();
+        m_map.reset();
     }
 }
 
