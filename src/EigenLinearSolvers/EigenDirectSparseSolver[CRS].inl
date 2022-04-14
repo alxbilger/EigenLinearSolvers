@@ -110,7 +110,7 @@ void EigenDirectSparseSolver<sofa::linearalgebra::CompressedRowSparseMatrix<TBlo
         default: m_solver.template emplace<AMDOrderSolver>(); break;
         }
         m_selectedOrderingMethod = d_orderingMethod.getValue().getSelectedId();
-        if (m_selectedOrderingMethod > 2)
+        if (m_selectedOrderingMethod >= std::variant_size_v<decltype(m_solver)>)
             m_selectedOrderingMethod = 1;
 
         MfilteredrowBegin.clear();
