@@ -41,7 +41,9 @@ public:
     using NaturalOrderSolver = typename EigenSolver::NaturalOrderSolver;
     using AMDOrderSolver     = typename EigenSolver::AMDOrderSolver;
     using COLAMDOrderSolver  = typename EigenSolver::COLAMDOrderSolver;
-    using MetisOrderSolver  = typename EigenSolver::MetisOrderSolver;
+#if EIGENLINEARSOLVERS_HAS_METIS_INCLUDE == 1
+    using MetisOrderSolver   = typename EigenSolver::MetisOrderSolver;
+#endif
 
     ~EigenDirectSparseSolver() override = default;
 
