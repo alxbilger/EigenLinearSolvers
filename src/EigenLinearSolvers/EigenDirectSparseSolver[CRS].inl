@@ -103,11 +103,13 @@ void EigenDirectSparseSolver<sofa::linearalgebra::CompressedRowSparseMatrix<TBlo
     {
         switch(d_orderingMethod.getValue().getSelectedId())
         {
-        case 0:  m_solver.template emplace<NaturalOrderSolver>(); break;
-        case 1:  m_solver.template emplace<AMDOrderSolver>(); break;
-        case 2:  m_solver.template emplace<COLAMDOrderSolver>(); break;
-        case 3:  m_solver.template emplace<MetisOrderSolver>(); break;
-        default: m_solver.template emplace<AMDOrderSolver>(); break;
+        case 0:  m_solver.template emplace<std::variant_alternative_t<0, decltype(m_solver)> >(); break;
+        case 1:  m_solver.template emplace<std::variant_alternative_t<1, decltype(m_solver)> >(); break;
+        case 2:  m_solver.template emplace<std::variant_alternative_t<2, decltype(m_solver)> >(); break;
+#if EIGENLINEARSOLVERS_HAS_METIS_INCLUDE == 1
+        case 3:  m_solver.template emplace<std::variant_alternative_t<3, decltype(m_solver)> >(); break;
+#endif
+        default: m_solver.template emplace<std::variant_alternative_t<1, decltype(m_solver)> >(); break;
         }
         m_selectedOrderingMethod = d_orderingMethod.getValue().getSelectedId();
         if (m_selectedOrderingMethod >= std::variant_size_v<decltype(m_solver)>)
@@ -125,7 +127,12 @@ typename sofa::linearalgebra::CompressedRowSparseMatrix<TBlockType>::Real>, Eige
     : Inherit1()
     , d_orderingMethod(initData(&d_orderingMethod, "ordering", "Ordering method"))
 {
+#if EIGENLINEARSOLVERS_HAS_METIS_INCLUDE == 1
     sofa::helper::OptionsGroup d_orderingMethodOptions(4,"Natural", "AMD", "COLAMD", "Metis");
+#else
+    sofa::helper::OptionsGroup d_orderingMethodOptions(3,"Natural", "AMD", "COLAMD");
+#endif
+
     d_orderingMethodOptions.setSelectedItem(1); // default None
     d_orderingMethod.setValue(d_orderingMethodOptions);
 }

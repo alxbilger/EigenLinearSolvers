@@ -13,6 +13,7 @@
 #include <Eigen/SparseCore>
 
 #include <sofa/helper/OptionsGroup.h>
+#include <EigenLinearSolvers/FindMetis.h>
 
 namespace EigenLinearSolvers
 {
@@ -59,7 +60,11 @@ protected:
     sofa::core::objectmodel::Data<sofa::helper::OptionsGroup> d_orderingMethod;
     unsigned int m_selectedOrderingMethod { std::numeric_limits<unsigned int>::max() };
 
-    std::variant<NaturalOrderSolver, AMDOrderSolver, COLAMDOrderSolver, MetisOrderSolver> m_solver;
+    std::variant<NaturalOrderSolver, AMDOrderSolver, COLAMDOrderSolver
+#if EIGENLINEARSOLVERS_HAS_METIS_INCLUDE == 1
+    , MetisOrderSolver
+#endif
+    > m_solver;
 
     Eigen::ComputationInfo getSolverInfo() const;
     void updateSolverOderingMethod();
